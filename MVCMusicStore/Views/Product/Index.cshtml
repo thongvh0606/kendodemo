@@ -1,0 +1,95 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.common-material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.material.mobile.min.css" />
+
+    <script src="https://kendo.cdn.telerik.com/2017.2.621/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2017.2.621/js/kendo.all.min.js"></script>
+</head>
+<body>
+<div id="example">
+    <div id="grid"></div>
+
+    <script>
+        $(document).ready(function () {
+            
+                var dataSource = new kendo.data.DataSource({
+                    transport: {
+                        read:  {
+                            url: "Read",
+                            dataType: "jsonp"
+                        },
+                        //update: {
+                        //    url: crudServiceBaseUrl + "/Products/Update",
+                        //    dataType: "jsonp"
+                        //},
+                        //destroy: {
+                        //    url: crudServiceBaseUrl + "/Products/Destroy",
+                        //    dataType: "jsonp"
+                        //},
+                        //create: {
+                        //    url: crudServiceBaseUrl + "/Products/Create",
+                        //    dataType: "jsonp"
+                        //},
+                        parameterMap: function(options, operation) {
+                            if (operation !== "read" && options.models) {
+                                return {models: kendo.stringify(options.models)};
+                            }
+                        }
+                    },
+                    batch: true,
+                    pageSize: 10,
+                    schema: {
+                        model: {
+                            id: "AlbumId",
+                            fields: {
+                                AlbumId: { editable: false, nullable: true },
+                                ArtistId: { validation: { required: true } },
+                                //Artist: {
+                                //    defaultValue: {
+                                //        ArtistId: 0, Name: ""
+                                //    }
+                                //},
+
+                                Price: { type: "number", validation: { required: true, min: 1} },
+                                Title: { type: "string" }
+                                
+                            }
+                        }
+                    }
+                });
+
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
+                pageable: true,
+                height: 550,
+                sortable: true,
+                filterable: true,
+                toolbar: ["create"],
+                columns: [
+                    { field: "AlbumId", title: "AlbumId" },
+                    { field: "ArtistId", title: "ArtistId" },
+                    //{ field: "Artist", title: "Name", template: "#=Artist.Name#" },
+                    { field: "Price", title:"Price" },
+                    { field: "Title", title: "Title" },
+                    { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }
+                ],
+                editable: "popup"
+            });
+        });
+
+        
+    </script>
+</div>
+</body>
+</html>

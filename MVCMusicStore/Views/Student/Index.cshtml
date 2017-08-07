@@ -1,0 +1,88 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.common-material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.material.mobile.min.css" />
+
+    <script src="https://kendo.cdn.telerik.com/2017.2.621/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2017.2.621/js/kendo.all.min.js"></script>
+</head>
+<body>
+    <div id="example">
+        <div id="grid"></div>
+
+        <script>
+            $(document).ready(function () {
+
+                var dataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: "Read",
+                            dataType: "jsonp"
+                        },
+                        update: {
+                            url: "Update",
+                            dataType: "jsonp"
+                        },
+                        destroy: {
+                            url: "Destroy",
+                            dataType: "jsonp"
+                        },
+                        create: {
+                            url:  "Create",
+                            dataType: "jsonp"
+                        },
+                        parameterMap: function (options, operation) {
+                            if (operation !== "read" && options.models) {
+                                return { models: kendo.stringify(options.models) };
+                            }
+                        }
+                    },
+                    batch: true,
+                    pageSize: 5,
+                    schema: {
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Id: { defaultValue: 0, editable: false },
+                                Name: { validation: { required: true } },
+                                Attendance: { type: "number", validation: { required: true, min: 0 } },
+                                Course: { type: "string", validation: { required: true } },
+                                Semester: { type: "string", validation: { required: true } }
+                            }
+                        }
+                    }
+                });
+                //console.log(dataSource);
+                $("#grid").kendoGrid({
+                    dataSource: dataSource,
+                    pageable: true,
+                    height: 550,
+                    sortable: true,
+                    filterable: true,
+                    toolbar: ["create"],
+                    columns: [                        
+                        { field: "Name", title: "Name" },
+                        { field: "Attendance", title: "Attendance" },
+                        { field: "Course", title: "Course" },
+                        { field: "Semester", title: "Semester" },
+                        { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }
+                    ],
+                    editable: "popup"
+                });
+            });
+
+
+        </script>
+    </div>
+</body>
+</html>
